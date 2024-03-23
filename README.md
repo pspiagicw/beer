@@ -1,4 +1,3 @@
-```markdown
 # `beer`
 
 `beer` is a programming language.
@@ -80,9 +79,46 @@ Call using
 - `&&`, `||`, `!`.
 - `++`, `--`.
 
-### `keywords`
+### `tests`
 
+- Write a test anywhere.
 
-```
+- Just use `test` instead of `fn`.
+
+`
+test add {
+    a: 10
+    b: 20
+    assert a + b == 30, "addition failed"
+}`
+
+- `assert` can test anything!
+
+### `cask`
+
+- A `cask` is a something like a `package` in other languages.
+
+`
+import math
+`
+
+- Export functions using `cask` keyword.
+
+`cask {
+    ;; mention the functions you want to export
+    ;; you can only export functions
+    add,
+}`
+
+- Should be at the end of the file.
+- A directory with a set of files becomes a `cask`, that can be imported with the directory name.
+- A directory when run using `beer run` will find the `main` function and run it. It shouldn't be exported.
+
+## `language`
+
+- Open a file with `.b` as extension and write code.
+- Run code with `beer run <filename>`
+- Generate a new project with `beer create`
+- Test code with `beer test`.
 
 
