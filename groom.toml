@@ -1,0 +1,25 @@
+name = "beer"
+
+
+[task.build]
+command = "go build ."
+description = "Build the project"
+depends = [
+    "generate",
+    "format"
+]
+
+[task.format]
+command = "go fmt ./..."
+description = "Format the project"
+
+[task.generate]
+command = "go generate ./..."
+description = "Go generate"
+
+[task.test]
+command = "go test ./..."
+description = "Test the project"
+depends = [
+    "build"
+]
