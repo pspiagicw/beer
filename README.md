@@ -112,13 +112,17 @@ import math
 
 - Should be at the end of the file.
 - A directory with a set of files becomes a `cask`, that can be imported with the directory name.
-- A directory when run using `beer run` will find the `main` function and run it. It shouldn't be exported.
+- A directory when run using `bart run` will find the `main` function and run it. It shouldn't be exported.
 
 ## `language`
 
+`bartender` is the program that powers many quality of life features.
+
+You can invoke `bartender` using the binary `bart`.
+
 - Open a file with `.b` as extension and write code.
-- Run code with `beer run <filename>`
-- Generate a new project with `beer create`
-- Test code with `beer test`.
+- Run code with `bart run <filename>`
+- Generate a new project with `bart create`
+- Test code with `bart test`.
 
 
