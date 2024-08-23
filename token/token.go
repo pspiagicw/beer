@@ -1,5 +1,9 @@
 package token
 
+import "fmt"
+
+//go:generate stringer -type=TokenType
+
 type TokenType int
 
 type Token struct {
@@ -8,6 +12,10 @@ type Token struct {
 	Line   int
 	Column int
 	File   string
+}
+
+func (t Token) String() string {
+	return fmt.Sprintf("Token{Type: %s, Value: %s, Line: %d, Column: %d, File: %s}", t.Type, t.Value, t.Line, t.Column, t.File)
 }
 
 const (
@@ -35,6 +43,11 @@ const (
 	BOOL
 	STRING
 
+	TINT
+	TSTRING
+	TBOOL
+	TFLOAT
+
 	GT
 	GTE
 	LT
@@ -43,4 +56,8 @@ const (
 
 	OR
 	AND
+	BITAND
+	BITOR
+
+	ILLEGAL
 )

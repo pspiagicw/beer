@@ -6,7 +6,6 @@ command = "go build ."
 description = "Build the project"
 depends = [
     "generate",
-    "format"
 ]
 
 [task.format]
@@ -18,7 +17,7 @@ command = "go generate ./..."
 description = "Go generate"
 
 [task.test]
-command = "go test ./..."
+command = "go test ./... -test.fullpath -timeout 1000ms -failfast"
 description = "Test the project"
 depends = [
     "build"

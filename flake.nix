@@ -5,7 +5,7 @@
     # Nixpkgs repository
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
-    custom.url = "github:pspiagicw/flakes";
+    custom.url = "github:pspiagicw/packages";
   };
 
   outputs = {
@@ -17,10 +17,12 @@
       pkgs = import nixpkgs {system = "x86_64-linux";};
     in
       pkgs.mkShell {
+        hardeningDisable = ["fortify"];
         buildInputs = [
           pkgs.go
           pkgs.gopls
           pkgs.delve
+          pkgs.nodejs_22
           pkgs.gotools
           custom.packages.x86_64-linux.groom
         ];
