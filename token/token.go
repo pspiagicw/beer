@@ -40,8 +40,9 @@ const (
 
 	FLOAT
 	INT
-	BOOL
 	STRING
+	TRUE
+	FALSE
 
 	TINT
 	TSTRING
@@ -52,12 +53,23 @@ const (
 	GTE
 	LT
 	LTE
+	EQ
 	NEQ
+	NEGATE
 
 	OR
 	AND
 	BITAND
 	BITOR
+
+	IF
+	ELSE
+	FOR
+	WHILE
+	RETURN
+	FN
+	LET
+	DEF
 
 	ILLEGAL
 )

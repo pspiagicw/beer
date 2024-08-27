@@ -37,12 +37,13 @@ func TestSquareBrackets(t *testing.T) {
 }
 
 func TestArithmeticOperators(t *testing.T) {
-	input := `+ - * /`
+	input := `+ - * / .`
 	expectedTokens := []token.Token{
 		{Type: token.PLUS, Value: "+"},
 		{Type: token.MINUS, Value: "-"},
 		{Type: token.STAR, Value: "*"},
 		{Type: token.SLASH, Value: "/"},
+		{Type: token.PERIOD, Value: "."},
 		{Type: token.EOF, Value: ""},
 	}
 	testTokens(t, input, expectedTokens)
@@ -69,15 +70,6 @@ func TestIntegerLiteral(t *testing.T) {
 	testTokens(t, input, expectedTokens)
 }
 
-func TestBooleanLiteral(t *testing.T) {
-	input := `true`
-	expectedTokens := []token.Token{
-		{Type: token.BOOL, Value: "true"},
-		{Type: token.EOF, Value: ""},
-	}
-	testTokens(t, input, expectedTokens)
-}
-
 func TestFloatingPointLiteral(t *testing.T) {
 	input := `3.14`
 	expectedTokens := []token.Token{
@@ -86,12 +78,33 @@ func TestFloatingPointLiteral(t *testing.T) {
 	}
 	testTokens(t, input, expectedTokens)
 }
+func TestMultipleFloatingPointLiterals(t *testing.T) {
+	input := `3.14 2.71.23.1`
+	expectedTokens := []token.Token{
+		{Type: token.FLOAT, Value: "3.14"},
+		{Type: token.FLOAT, Value: "2.71"},
+		{Type: token.PERIOD, Value: "."},
+		{Type: token.FLOAT, Value: "23.1"},
+		{Type: token.EOF, Value: ""},
+	}
+	testTokens(t, input, expectedTokens)
+}
+
+func TestBooleanLiteral(t *testing.T) {
+	input := `true false`
+	expectedTokens := []token.Token{
+		{Type: token.TRUE, Value: "true"},
+		{Type: token.FALSE, Value: "false"},
+		{Type: token.EOF, Value: ""},
+	}
+	testTokens(t, input, expectedTokens)
+}
 
 func TestStringLiterals(t *testing.T) {
 	input := `"single quoted" "double quoted"`
 	expectedTokens := []token.Token{
-		{Type: token.STRING, Value: `"single quoted"`},
-		{Type: token.STRING, Value: `"double quoted"`},
+		{Type: token.STRING, Value: `single quoted`},
+		{Type: token.STRING, Value: `double quoted`},
 		{Type: token.EOF, Value: ""},
 	}
 	testTokens(t, input, expectedTokens)
@@ -142,10 +155,13 @@ func TestComparisonOperators4(t *testing.T) {
 }
 
 func TestComparisonOperators5(t *testing.T) {
-	input := `r != s`
+	input := `r != s r == s`
 	expectedTokens := []token.Token{
 		{Type: token.IDENT, Value: "r"},
 		{Type: token.NEQ, Value: "!="},
+		{Type: token.IDENT, Value: "s"},
+		{Type: token.IDENT, Value: "r"},
+		{Type: token.EQ, Value: "=="},
 		{Type: token.IDENT, Value: "s"},
 		{Type: token.EOF, Value: ""},
 	}
@@ -247,7 +263,7 @@ func TestCombinedElements1(t *testing.T) {
 func TestCombinedElements2(t *testing.T) {
 	input := `if (x > 10) { y = true; }`
 	expectedTokens := []token.Token{
-		{Type: token.IDENT, Value: "if"},
+		{Type: token.IF, Value: "if"},
 		{Type: token.LPAREN, Value: "("},
 		{Type: token.IDENT, Value: "x"},
 		{Type: token.GT, Value: ">"},
@@ -256,7 +272,7 @@ func TestCombinedElements2(t *testing.T) {
 		{Type: token.LBRACE, Value: "{"},
 		{Type: token.IDENT, Value: "y"},
 		{Type: token.ASSIGN, Value: "="},
-		{Type: token.BOOL, Value: "true"},
+		{Type: token.TRUE, Value: "true"},
 		{Type: token.SEMICOLON, Value: ";"},
 		{Type: token.RBRACE, Value: "}"},
 		{Type: token.EOF, Value: ""},
@@ -269,9 +285,9 @@ func TestCombinedElements3(t *testing.T) {
 	expectedTokens := []token.Token{
 		{Type: token.IDENT, Value: "result"},
 		{Type: token.ASSIGN, Value: "="},
-		{Type: token.STRING, Value: `"hello"`},
+		{Type: token.STRING, Value: `hello`},
 		{Type: token.PLUS, Value: "+"},
-		{Type: token.STRING, Value: `"world"`},
+		{Type: token.STRING, Value: `world`},
 		{Type: token.SEMICOLON, Value: ";"},
 		{Type: token.EOF, Value: ""},
 	}
@@ -283,7 +299,7 @@ func TestCombinedElements4(t *testing.T) {
 	expectedTokens := []token.Token{
 		{Type: token.IDENT, Value: "print"},
 		{Type: token.LPAREN, Value: "("},
-		{Type: token.STRING, Value: `"result is "`},
+		{Type: token.STRING, Value: `result is `},
 		{Type: token.PLUS, Value: "+"},
 		{Type: token.LPAREN, Value: "("},
 		{Type: token.IDENT, Value: "x"},
@@ -312,6 +328,22 @@ func TestDotSymbol(t *testing.T) {
 	testTokens(t, input, expectedTokens)
 }
 
+func TestKeywords(t *testing.T) {
+	input := `if else for while return fn let def`
+	expectedTokens := []token.Token{
+		{Type: token.IF, Value: "if"},
+		{Type: token.ELSE, Value: "else"},
+		{Type: token.FOR, Value: "for"},
+		{Type: token.WHILE, Value: "while"},
+		{Type: token.RETURN, Value: "return"},
+		{Type: token.FN, Value: "fn"},
+		{Type: token.LET, Value: "let"},
+		{Type: token.DEF, Value: "def"},
+		{Type: token.EOF, Value: ""},
+	}
+	testTokens(t, input, expectedTokens)
+}
+
 func testTokens(t *testing.T, input string, expected []token.Token) {
 	t.Helper()
 
@@ -321,7 +353,7 @@ func testTokens(t *testing.T, input string, expected []token.Token) {
 		actualToken := l.Next()
 
 		if assert.NotNil(t, actualToken) {
-			assert.Equal(t, expectedToken.Type.String(), actualToken.Type.String(), "Token Value doesn't match")
+			assert.Equal(t, expectedToken.Type.String(), actualToken.Type.String(), "Token type doesn't match")
 			assert.Equal(t, expectedToken.Value, actualToken.Value, "Token value doesn't match")
 		}
 	}

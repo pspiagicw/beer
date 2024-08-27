@@ -25,27 +25,38 @@ func _() {
 	_ = x[PERIOD-14]
 	_ = x[FLOAT-15]
 	_ = x[INT-16]
-	_ = x[BOOL-17]
-	_ = x[STRING-18]
-	_ = x[TINT-19]
-	_ = x[TSTRING-20]
-	_ = x[TBOOL-21]
-	_ = x[TFLOAT-22]
-	_ = x[GT-23]
-	_ = x[GTE-24]
-	_ = x[LT-25]
-	_ = x[LTE-26]
-	_ = x[NEQ-27]
-	_ = x[OR-28]
-	_ = x[AND-29]
-	_ = x[BITAND-30]
-	_ = x[BITOR-31]
-	_ = x[ILLEGAL-32]
+	_ = x[STRING-17]
+	_ = x[TRUE-18]
+	_ = x[FALSE-19]
+	_ = x[TINT-20]
+	_ = x[TSTRING-21]
+	_ = x[TBOOL-22]
+	_ = x[TFLOAT-23]
+	_ = x[GT-24]
+	_ = x[GTE-25]
+	_ = x[LT-26]
+	_ = x[LTE-27]
+	_ = x[EQ-28]
+	_ = x[NEQ-29]
+	_ = x[NEGATE-30]
+	_ = x[OR-31]
+	_ = x[AND-32]
+	_ = x[BITAND-33]
+	_ = x[BITOR-34]
+	_ = x[IF-35]
+	_ = x[ELSE-36]
+	_ = x[FOR-37]
+	_ = x[WHILE-38]
+	_ = x[RETURN-39]
+	_ = x[FN-40]
+	_ = x[LET-41]
+	_ = x[DEF-42]
+	_ = x[ILLEGAL-43]
 }
 
-const _TokenType_name = "EOFLPARENRPARENLBRACERBRACELSQUARERSQUARESEMICOLONASSIGNIDENTPLUSSTARMINUSSLASHPERIODFLOATINTBOOLSTRINGTINTTSTRINGTBOOLTFLOATGTGTELTLTENEQORANDBITANDBITORILLEGAL"
+const _TokenType_name = "EOFLPARENRPARENLBRACERBRACELSQUARERSQUARESEMICOLONASSIGNIDENTPLUSSTARMINUSSLASHPERIODFLOATINTSTRINGTRUEFALSETINTTSTRINGTBOOLTFLOATGTGTELTLTEEQNEQNEGATEORANDBITANDBITORIFELSEFORWHILERETURNFNLETDEFILLEGAL"
 
-var _TokenType_index = [...]uint8{0, 3, 9, 15, 21, 27, 34, 41, 50, 56, 61, 65, 69, 74, 79, 85, 90, 93, 97, 103, 107, 114, 119, 125, 127, 130, 132, 135, 138, 140, 143, 149, 154, 161}
+var _TokenType_index = [...]uint8{0, 3, 9, 15, 21, 27, 34, 41, 50, 56, 61, 65, 69, 74, 79, 85, 90, 93, 99, 103, 108, 112, 119, 124, 130, 132, 135, 137, 140, 142, 145, 151, 153, 156, 162, 167, 169, 173, 176, 181, 187, 189, 192, 195, 202}
 
 func (i TokenType) String() string {
 	if i < 0 || i >= TokenType(len(_TokenType_index)-1) {
