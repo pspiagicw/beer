@@ -6,17 +6,20 @@ import (
 	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/pspiagicw/osy/ast"
 	"github.com/pspiagicw/osy/lexer"
+	"github.com/pspiagicw/osy/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestReturn(t *testing.T) {
-	t.Skip()
-	input := `return 1`
+	input := `return 1;`
 
 	ast := &ast.Program{
 		Statements: []ast.Statement{
 			&ast.ReturnStatement{
-				Value: &ast.Constant{},
+				Value: &ast.Constant{
+					Value: "1",
+					Type:  types.Integer,
+				},
 			},
 		},
 	}

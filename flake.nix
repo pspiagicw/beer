@@ -22,7 +22,6 @@
           pkgs.go
           pkgs.gopls
           pkgs.delve
-          pkgs.nodejs_22
           pkgs.gotools
           custom.packages.x86_64-linux.groom
         ];

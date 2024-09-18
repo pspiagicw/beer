@@ -1,5 +1,9 @@
 package types
 
-type Type interface {
-	Type() string
-}
+//go:generate stringer -type=Type
+
+type Type int
+
+const (
+	Integer Type = iota
+)
