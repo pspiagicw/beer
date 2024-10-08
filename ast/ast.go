@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/pspiagicw/osy/token"
 	"github.com/pspiagicw/osy/types"
 )
 
@@ -126,4 +127,19 @@ func (v VariableDeclaration) String() string {
 func (v VariableDeclaration) Pretty() string {
 	// TOOD: Pretty print Variable Declaration
 	return "pretty variable declaration"
+}
+
+type BinaryExpression struct {
+	Right    Expression
+	Operator token.TokenType
+	Left     Expression
+}
+
+func (b BinaryExpression) expressionNode() {}
+func (b BinaryExpression) String() string {
+	return fmt.Sprintf("%s %s %s", b.Left, b.Operator, b.Right)
+}
+func (b BinaryExpression) Pretty() string {
+	// TODO: Pretty print Binary Expressio
+	return "binary expression"
 }
