@@ -9,11 +9,16 @@ func _() {
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
 	_ = x[Integer-0]
+	_ = x[Float-1]
+	_ = x[String-2]
+	_ = x[Boolean-3]
+	_ = x[Void-4]
+	_ = x[Illegal-5]
 }
 
-const _Type_name = "Integer"
+const _Type_name = "IntegerFloatStringBooleanVoidIllegal"
 
-var _Type_index = [...]uint8{0, 7}
+var _Type_index = [...]uint8{0, 7, 12, 18, 25, 29, 36}
 
 func (i Type) String() string {
 	if i < 0 || i >= Type(len(_Type_index)-1) {

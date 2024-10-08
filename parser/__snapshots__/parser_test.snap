@@ -2,3 +2,107 @@
 [TestReturn - 1]
 (*ast.Program)(nil)
 ---
+
+[TestReturnInteger - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.Constant{Value:"1", Type:0},
+        },
+    },
+}
+---
+
+[TestReturnBoolean - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.Constant{Value:"true", Type:3},
+        },
+    },
+}
+---
+
+[TestFunctionDefinition - 1]
+&ast.Program{
+    Statements: {
+    },
+}
+---
+
+[TestVariableAssignmentBoolean - 1]
+&ast.Program{
+    Statements: {
+        &ast.Assignment{
+            Name:  "status",
+            Value: &ast.Constant{Value:"false", Type:3},
+        },
+    },
+}
+---
+
+[TestVariableAssignmentInteger - 1]
+&ast.Program{
+    Statements: {
+        &ast.Assignment{
+            Name:  "a",
+            Value: &ast.Constant{Value:"1", Type:0},
+        },
+    },
+}
+---
+
+[TestVariableDeclarationString - 1]
+&ast.Program{
+    Statements: {
+        &ast.VariableDeclaration{Name:"name", Type:2},
+    },
+}
+---
+
+[TestVariableDeclarationBoolean - 1]
+&ast.Program{
+    Statements: {
+        &ast.VariableDeclaration{Name:"status", Type:3},
+    },
+}
+---
+
+[TestVariableDeclarationInteger - 1]
+&ast.Program{
+    Statements: {
+        &ast.VariableDeclaration{Name:"a", Type:0},
+    },
+}
+---
+
+[TestVariableAssignmentString - 1]
+&ast.Program{
+    Statements: {
+        &ast.Assignment{
+            Name:  "name",
+            Value: &ast.Constant{Value:"pspiagicw", Type:2},
+        },
+    },
+}
+---
+
+[TestReturnString - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.Constant{Value:"hello", Type:2},
+        },
+    },
+}
+---
+
+[TestReturnFloat - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.Constant{Value:"3.14", Type:1},
+        },
+    },
+}
+---
