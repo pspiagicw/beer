@@ -106,3 +106,13 @@
     },
 }
 ---
+
+[TestReturnAdditionAndSubtraction - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.Constant{Value:"2", Type:0},
+        },
+    },
+}
+---
