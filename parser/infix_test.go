@@ -8,6 +8,101 @@ import (
 	"github.com/pspiagicw/osy/types"
 )
 
+func TestReturnAdd(t *testing.T) {
+	input := `return 1 + 2;`
+
+	ast := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.ReturnStatement{
+				Value: &ast.BinaryExpression{
+					Left: &ast.Constant{
+						Value: "1",
+						Type:  types.Integer,
+					},
+					Operator: token.PLUS,
+					Right: &ast.Constant{
+						Value: "2",
+						Type:  types.Integer,
+					},
+				},
+			},
+		},
+	}
+
+	testParser(t, input, ast)
+}
+func TestReturnSubstract(t *testing.T) {
+	input := `return 1 - 2;`
+
+	ast := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.ReturnStatement{
+				Value: &ast.BinaryExpression{
+					Left: &ast.Constant{
+						Value: "1",
+						Type:  types.Integer,
+					},
+					Operator: token.MINUS,
+					Right: &ast.Constant{
+						Value: "2",
+						Type:  types.Integer,
+					},
+				},
+			},
+		},
+	}
+
+	testParser(t, input, ast)
+}
+
+func TestReturnMultiply(t *testing.T) {
+	input := `return 1 * 2;`
+
+	ast := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.ReturnStatement{
+				Value: &ast.BinaryExpression{
+					Left: &ast.Constant{
+						Value: "1",
+						Type:  types.Integer,
+					},
+					Operator: token.STAR,
+					Right: &ast.Constant{
+						Value: "2",
+						Type:  types.Integer,
+					},
+				},
+			},
+		},
+	}
+
+	testParser(t, input, ast)
+}
+
+func TestReturnDivide(t *testing.T) {
+	input := `return 1 / 2;`
+
+	ast := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.ReturnStatement{
+				Value: &ast.BinaryExpression{
+					Left: &ast.Constant{
+						Value: "1",
+						Type:  types.Integer,
+					},
+					Operator: token.SLASH,
+					Right: &ast.Constant{
+						Value: "2",
+						Type:  types.Integer,
+					},
+				},
+			},
+		},
+	}
+
+	testParser(t, input, ast)
+}
+
 func TestReturnAdditionAndSubtraction(t *testing.T) {
 	input := `return 2 + 3 - 1;`
 
@@ -40,7 +135,7 @@ func TestReturnAdditionAndSubtraction(t *testing.T) {
 }
 
 func TestReturnMultiplicationAndDivisionPrecedence(t *testing.T) {
-	input := `return 2 + 3 * 4;`
+	input := `return 2 + 3 / 4;`
 
 	ast := &ast.Program{
 		Statements: []ast.Statement{
@@ -56,42 +151,11 @@ func TestReturnMultiplicationAndDivisionPrecedence(t *testing.T) {
 							Value: "3",
 							Type:  types.Integer,
 						},
-						Operator: token.STAR,
+						Operator: token.SLASH,
 						Right: &ast.Constant{
 							Value: "4",
 							Type:  types.Integer,
 						},
-					},
-				},
-			},
-		},
-	}
-
-	testParser(t, input, ast)
-}
-
-func TestReturnParenthesesOverridePrecedence(t *testing.T) {
-	input := `return (2 + 3) * 4;`
-
-	ast := &ast.Program{
-		Statements: []ast.Statement{
-			&ast.ReturnStatement{
-				Value: &ast.BinaryExpression{
-					Left: &ast.BinaryExpression{
-						Left: &ast.Constant{
-							Value: "2",
-							Type:  types.Integer,
-						},
-						Operator: token.PLUS,
-						Right: &ast.Constant{
-							Value: "3",
-							Type:  types.Integer,
-						},
-					},
-					Operator: token.STAR,
-					Right: &ast.Constant{
-						Value: "4",
-						Type:  types.Integer,
 					},
 				},
 			},
@@ -139,6 +203,37 @@ func TestReturnMultipleOperatorsPrecedence(t *testing.T) {
 								Type:  types.Integer,
 							},
 						},
+					},
+				},
+			},
+		},
+	}
+
+	testParser(t, input, ast)
+}
+
+func TestReturnParenthesesOverridePrecedence(t *testing.T) {
+	input := `return (2 + 3) * 4;`
+
+	ast := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.ReturnStatement{
+				Value: &ast.BinaryExpression{
+					Left: &ast.BinaryExpression{
+						Left: &ast.Constant{
+							Value: "2",
+							Type:  types.Integer,
+						},
+						Operator: token.PLUS,
+						Right: &ast.Constant{
+							Value: "3",
+							Type:  types.Integer,
+						},
+					},
+					Operator: token.STAR,
+					Right: &ast.Constant{
+						Value: "4",
+						Type:  types.Integer,
 					},
 				},
 			},

@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
-
+	"github.com/kr/pretty"
 	"github.com/pspiagicw/goreland"
 	"github.com/pspiagicw/osy/lexer"
-	"github.com/pspiagicw/osy/token"
+	"github.com/pspiagicw/osy/parser"
 	"github.com/pspiagicw/regolith"
 )
 
@@ -34,12 +33,16 @@ func main() {
 
 		l := lexer.New(input)
 
-		for {
-			tok := l.Next()
-			if tok.Type == token.EOF {
-				break
+		p := parser.New(l)
+
+		program := p.Parse()
+
+		if p.HasError {
+			for _, err := range p.Errors() {
+				goreland.LogError("PARSER ERROR: %v", err)
 			}
-			fmt.Println(tok)
 		}
+
+		pretty.Println(program)
 	}
 }

@@ -27,6 +27,7 @@
       pkgs = import nixpkgs {system = "aarch64-linux";};
     in
       pkgs.mkShell {
+        hardeningDisable = ["fortify"];
         buildInputs = [
           pkgs.gopls
           pkgs.delve

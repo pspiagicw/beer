@@ -10,6 +10,23 @@ import (
 	"github.com/pspiagicw/osy/types"
 )
 
+const (
+	_ = iota
+	LOWEST
+	INTEGER
+	ADD
+	MULTIPLY
+	DIVIDE
+)
+
+var precedences = map[token.TokenType]int{
+	token.INT:   INTEGER,
+	token.PLUS:  ADD,
+	token.MINUS: ADD,
+	token.STAR:  MULTIPLY,
+	token.SLASH: DIVIDE,
+}
+
 type Parser struct {
 	HasError  bool
 	curToken  token.Token
@@ -19,6 +36,7 @@ type Parser struct {
 	errors []error
 
 	prefixParseFunctions map[token.TokenType]func() ast.Expression
+	infixParseFunctions  map[token.TokenType]func(ast.Expression) ast.Expression
 }
 
 func New(l *lexer.Lexer) *Parser {
@@ -26,6 +44,7 @@ func New(l *lexer.Lexer) *Parser {
 		l:                    l,
 		nextToken:            *l.Next(),
 		prefixParseFunctions: make(map[token.TokenType]func() ast.Expression),
+		infixParseFunctions:  make(map[token.TokenType]func(ast.Expression) ast.Expression),
 		errors:               []error{},
 	}
 	p.registerPrefixFn(token.INT, p.parseInteger)
@@ -33,6 +52,10 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefixFn(token.TRUE, p.parseBoolean)
 	p.registerPrefixFn(token.STRING, p.parseString)
 	p.registerPrefixFn(token.FLOAT, p.parseFloat)
+	p.registerInfixFn(token.PLUS, p.parseAdd)
+	p.registerInfixFn(token.MINUS, p.parseSubstract)
+	p.registerInfixFn(token.STAR, p.parseMultiply)
+	p.registerInfixFn(token.SLASH, p.parseDivide)
 	p.advance()
 	return p
 }
@@ -40,9 +63,23 @@ func (p *Parser) registerPrefixFn(ttype token.TokenType, fn func() ast.Expressio
 	p.prefixParseFunctions[ttype] = fn
 }
 
+func (p *Parser) registerInfixFn(ttype token.TokenType, fn func(ast.Expression) ast.Expression) {
+	p.infixParseFunctions[ttype] = fn
+}
+
 func (p *Parser) advance() {
 	p.curToken = p.nextToken
 	p.nextToken = *p.l.Next()
+}
+
+func (p *Parser) curPrecedence() int {
+	val, ok := precedences[p.curToken.Type]
+
+	if ok {
+		return val
+	}
+
+	return LOWEST
 }
 func (p *Parser) registerError(msg string, args ...interface{}) {
 	p.HasError = true
@@ -51,10 +88,18 @@ func (p *Parser) registerError(msg string, args ...interface{}) {
 }
 func (p *Parser) expectPeek(tokenType token.TokenType) bool {
 	if p.nextToken.Type != tokenType {
-		p.registerError("Expected %T got %T", tokenType, p.nextToken.Type)
+		p.registerError("Expected %s got %s", tokenType, p.nextToken.Type)
 	}
 	p.advance()
 	return true
+}
+func (p *Parser) expect(tokenType token.TokenType) bool {
+	if p.curToken.Type != tokenType {
+		p.registerError("Expected %s got %s", tokenType, p.curToken.Type)
+	}
+	p.advance()
+	return true
+
 }
 func (p *Parser) peekType() token.TokenType {
 	return p.nextToken.Type
@@ -67,20 +112,39 @@ func (p *Parser) parseReturnStatement() ast.Statement {
 
 	p.advance()
 
-	r.Value = p.parseExpression()
+	r.Value = p.parseExpression(LOWEST)
+
+	p.expect(token.SEMICOLON)
 
 	return r
 }
-func (p *Parser) parseExpression() ast.Expression {
+func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefixFn := p.prefixParseFunctions[p.curToken.Type]
 
-	if prefixFn != nil {
-		return prefixFn()
-	} else {
+	if prefixFn == nil {
 		p.registerError("No prefix parse fn found for %s", p.curToken.Type)
+		p.advance()
+		return nil
 	}
 
-	return nil
+	left := prefixFn()
+
+	for p.curToken.Type != token.EOF && precedence < p.curPrecedence() {
+		infixFn := p.infixParseFunctions[p.curToken.Type]
+
+		if infixFn == nil {
+			p.registerError("No infix parse fn found for %s", p.curToken.Type)
+			return nil
+		}
+
+		left = infixFn(left)
+
+		if left == nil {
+			return nil
+		}
+	}
+
+	return left
 }
 
 //	func (p *Parser) parseBlockStatement() ast.Statement {
@@ -131,7 +195,7 @@ func (p *Parser) parseAssignmentStatement() ast.Statement {
 	p.advance()
 	p.advance()
 
-	a.Value = p.parseExpression()
+	a.Value = p.parseExpression(LOWEST)
 
 	return a
 }
@@ -175,8 +239,9 @@ func (p *Parser) Parse() *ast.Program {
 		statement := p.parseStatement()
 		if statement != nil {
 			statements = append(statements, statement)
+		} else {
+			p.advance()
 		}
-		p.advance()
 	}
 
 	program.Statements = statements
@@ -190,6 +255,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseAssignmentStatement()
 	case token.DEF:
 		return p.parseDeclarationStatement()
+	default:
+		p.registerError("Can't start a statement with %s", p.curToken.Type)
 	}
 	return nil
 }
@@ -234,4 +301,73 @@ func (p *Parser) parseFloat() ast.Expression {
 		Type:  types.Float,
 	}
 	return f
+}
+func (p *Parser) parseAdd(left ast.Expression) ast.Expression {
+
+	op := &ast.BinaryExpression{}
+
+	p.advance()
+
+	right := p.parseExpression(ADD)
+
+	if right == nil {
+		return nil
+	}
+
+	op.Operator = token.PLUS
+	op.Left = left
+	op.Right = right
+
+	return op
+}
+func (p *Parser) parseSubstract(left ast.Expression) ast.Expression {
+	op := &ast.BinaryExpression{}
+
+	p.advance()
+
+	right := p.parseExpression(ADD)
+
+	if right == nil {
+		return nil
+	}
+
+	op.Operator = token.MINUS
+	op.Left = left
+	op.Right = right
+
+	return op
+}
+func (p *Parser) parseMultiply(left ast.Expression) ast.Expression {
+	op := &ast.BinaryExpression{}
+
+	p.advance()
+
+	right := p.parseExpression(ADD)
+
+	if right == nil {
+		return nil
+	}
+
+	op.Operator = token.STAR
+	op.Left = left
+	op.Right = right
+
+	return op
+}
+func (p *Parser) parseDivide(left ast.Expression) ast.Expression {
+	op := &ast.BinaryExpression{}
+
+	p.advance()
+
+	right := p.parseExpression(ADD)
+
+	if right == nil {
+		return nil
+	}
+
+	op.Operator = token.SLASH
+	op.Left = left
+	op.Right = right
+
+	return op
 }

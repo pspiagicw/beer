@@ -111,7 +111,115 @@
 &ast.Program{
     Statements: {
         &ast.ReturnStatement{
-            Value: &ast.Constant{Value:"2", Type:0},
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"1", Type:0},
+                Operator: 12,
+                Left:     &ast.BinaryExpression{
+                    Right:    &ast.Constant{Value:"3", Type:0},
+                    Operator: 10,
+                    Left:     &ast.Constant{Value:"2", Type:0},
+                },
+            },
+        },
+    },
+}
+---
+
+[TestReturnAdd - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"2", Type:0},
+                Operator: 10,
+                Left:     &ast.Constant{Value:"1", Type:0},
+            },
+        },
+    },
+}
+---
+
+[TestReturnSubstract - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"2", Type:0},
+                Operator: 12,
+                Left:     &ast.Constant{Value:"1", Type:0},
+            },
+        },
+    },
+}
+---
+
+[TestReturnMultiply - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"2", Type:0},
+                Operator: 11,
+                Left:     &ast.Constant{Value:"1", Type:0},
+            },
+        },
+    },
+}
+---
+
+[TestReturnDivide - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"2", Type:0},
+                Operator: 13,
+                Left:     &ast.Constant{Value:"1", Type:0},
+            },
+        },
+    },
+}
+---
+
+[TestReturnMultiplicationAndDivisionPrecedence - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right: &ast.BinaryExpression{
+                    Right:    &ast.Constant{Value:"4", Type:0},
+                    Operator: 13,
+                    Left:     &ast.Constant{Value:"3", Type:0},
+                },
+                Operator: 10,
+                Left:     &ast.Constant{Value:"2", Type:0},
+            },
+        },
+    },
+}
+---
+
+[TestReturnMultipleOperatorsPrecedence - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right: &ast.BinaryExpression{
+                    Right:    &ast.Constant{Value:"2", Type:0},
+                    Operator: 13,
+                    Left:     &ast.Constant{Value:"5", Type:0},
+                },
+                Operator: 12,
+                Left:     &ast.BinaryExpression{
+                    Right: &ast.BinaryExpression{
+                        Right:    &ast.Constant{Value:"4", Type:0},
+                        Operator: 11,
+                        Left:     &ast.Constant{Value:"3", Type:0},
+                    },
+                    Operator: 10,
+                    Left:     &ast.Constant{Value:"2", Type:0},
+                },
+            },
         },
     },
 }
