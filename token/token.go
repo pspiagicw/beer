@@ -32,27 +32,27 @@ const (
 
 	IDENT
 
-	PLUS
-	STAR
-	MINUS
-	SLASH
+	PLUS  //  10
+	STAR  // 11
+	MINUS // 12
+	SLASH // 13
 	PERIOD
 
-	FLOAT
+	FLOAT // 15
 	INT
 	STRING
 	TRUE
-	FALSE
+	FALSE // 19
 
-	TINT
+	TINT // 20
 	TSTRING
 	TBOOL
-	TFLOAT
+	TFLOAT // 23
 
-	GT
-	GTE
-	LT
-	LTE
+	GT  // 24
+	GTE // 25
+	LT  // 26
+	LTE // 27
 	EQ
 	NEQ
 	NEGATE

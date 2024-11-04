@@ -172,36 +172,34 @@ func TestReturnMultipleOperatorsPrecedence(t *testing.T) {
 		Statements: []ast.Statement{
 			&ast.ReturnStatement{
 				Value: &ast.BinaryExpression{
+					Right: &ast.BinaryExpression{
+						Right: &ast.Constant{
+							Value: "2",
+							Type:  types.Integer,
+						},
+						Operator: token.SLASH,
+						Left: &ast.Constant{
+							Value: "5",
+							Type:  types.Integer,
+						},
+					},
+					Operator: token.MINUS,
 					Left: &ast.BinaryExpression{
-						Left: &ast.BinaryExpression{
-							Left: &ast.Constant{
-								Value: "2",
+						Right: &ast.BinaryExpression{
+							Right: &ast.Constant{
+								Value: "4",
 								Type:  types.Integer,
 							},
-							Operator: token.PLUS,
-							Right: &ast.BinaryExpression{
-								Left: &ast.Constant{
-									Value: "3",
-									Type:  types.Integer,
-								},
-								Operator: token.STAR,
-								Right: &ast.Constant{
-									Value: "4",
-									Type:  types.Integer,
-								},
+							Operator: token.STAR,
+							Left: &ast.Constant{
+								Value: "3",
+								Type:  types.Integer,
 							},
 						},
-						Operator: token.MINUS,
-						Right: &ast.BinaryExpression{
-							Left: &ast.Constant{
-								Value: "5",
-								Type:  types.Integer,
-							},
-							Operator: token.SLASH,
-							Right: &ast.Constant{
-								Value: "2",
-								Type:  types.Integer,
-							},
+						Operator: token.PLUS,
+						Left: &ast.Constant{
+							Value: "2",
+							Type:  types.Integer,
 						},
 					},
 				},
@@ -250,34 +248,110 @@ func TestReturnNestedBinaryOperations(t *testing.T) {
 		Statements: []ast.Statement{
 			&ast.ReturnStatement{
 				Value: &ast.BinaryExpression{
-					Left: &ast.BinaryExpression{
+					Right: &ast.BinaryExpression{
+						Right:    &ast.Constant{Value: "5", Type: 0},
+						Operator: token.SLASH,
 						Left: &ast.BinaryExpression{
-							Left: &ast.Constant{
-								Value: "1",
-								Type:  types.Integer,
-							},
-							Operator: token.PLUS,
-							Right: &ast.Constant{
-								Value: "2",
-								Type:  types.Integer,
-							},
-						},
-						Operator: token.STAR,
-						Right: &ast.BinaryExpression{
-							Left: &ast.Constant{
-								Value: "3",
-								Type:  types.Integer,
-							},
+							Right:    &ast.Constant{Value: "4", Type: 0},
 							Operator: token.MINUS,
-							Right: &ast.Constant{
-								Value: "4",
-								Type:  types.Integer,
-							},
+							Left:     &ast.Constant{Value: "3", Type: 0},
 						},
 					},
-					Operator: token.SLASH,
+					Operator: token.STAR,
+					Left: &ast.BinaryExpression{
+						Right:    &ast.Constant{Value: "2", Type: 0},
+						Operator: token.PLUS,
+						Left:     &ast.Constant{Value: "1", Type: 0},
+					},
+				},
+			},
+		},
+	}
+	testParser(t, input, ast)
+}
+func TestReturnLessThan(t *testing.T) {
+	input := `return 3 < 4;`
+
+	ast := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.ReturnStatement{
+				Value: &ast.BinaryExpression{
+					Left: &ast.Constant{
+						Value: "3",
+						Type:  types.Integer,
+					},
+					Operator: token.LT,
 					Right: &ast.Constant{
-						Value: "5",
+						Value: "4",
+						Type:  types.Integer,
+					},
+				},
+			},
+		},
+	}
+
+	testParser(t, input, ast)
+}
+func TestReturnGreaterThan(t *testing.T) {
+	input := `return 3 > 4;`
+
+	ast := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.ReturnStatement{
+				Value: &ast.BinaryExpression{
+					Left: &ast.Constant{
+						Value: "3",
+						Type:  types.Integer,
+					},
+					Operator: token.GT,
+					Right: &ast.Constant{
+						Value: "4",
+						Type:  types.Integer,
+					},
+				},
+			},
+		},
+	}
+
+	testParser(t, input, ast)
+}
+func TestReturnLessThanEqual(t *testing.T) {
+	input := `return 3 <= 4;`
+
+	ast := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.ReturnStatement{
+				Value: &ast.BinaryExpression{
+					Left: &ast.Constant{
+						Value: "3",
+						Type:  types.Integer,
+					},
+					Operator: token.LTE,
+					Right: &ast.Constant{
+						Value: "4",
+						Type:  types.Integer,
+					},
+				},
+			},
+		},
+	}
+
+	testParser(t, input, ast)
+}
+func TestReturnGreaterThanEqual(t *testing.T) {
+	input := `return 3 >= 4;`
+
+	ast := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.ReturnStatement{
+				Value: &ast.BinaryExpression{
+					Left: &ast.Constant{
+						Value: "3",
+						Type:  types.Integer,
+					},
+					Operator: token.GTE,
+					Right: &ast.Constant{
+						Value: "4",
 						Type:  types.Integer,
 					},
 				},

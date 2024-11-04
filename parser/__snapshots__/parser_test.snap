@@ -224,3 +224,129 @@
     },
 }
 ---
+
+[TestReturnParenthesesOverridePrecedence - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"4", Type:0},
+                Operator: 11,
+                Left:     &ast.BinaryExpression{
+                    Right:    &ast.Constant{Value:"3", Type:0},
+                    Operator: 10,
+                    Left:     &ast.Constant{Value:"2", Type:0},
+                },
+            },
+        },
+    },
+}
+---
+
+[TestReturnNestedBinaryOperations - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right: &ast.BinaryExpression{
+                    Right:    &ast.Constant{Value:"5", Type:0},
+                    Operator: 13,
+                    Left:     &ast.BinaryExpression{
+                        Right:    &ast.Constant{Value:"4", Type:0},
+                        Operator: 12,
+                        Left:     &ast.Constant{Value:"3", Type:0},
+                    },
+                },
+                Operator: 11,
+                Left:     &ast.BinaryExpression{
+                    Right:    &ast.Constant{Value:"2", Type:0},
+                    Operator: 10,
+                    Left:     &ast.Constant{Value:"1", Type:0},
+                },
+            },
+        },
+    },
+}
+---
+
+[TestReturnLessThan - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"4", Type:0},
+                Operator: 26,
+                Left:     &ast.Constant{Value:"3", Type:0},
+            },
+        },
+    },
+}
+---
+
+[TestReturnGreaterThan - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"4", Type:0},
+                Operator: 24,
+                Left:     &ast.Constant{Value:"3", Type:0},
+            },
+        },
+    },
+}
+---
+
+[TestReturnLessThanEqual - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"4", Type:0},
+                Operator: 27,
+                Left:     &ast.Constant{Value:"3", Type:0},
+            },
+        },
+    },
+}
+---
+
+[TestReturnGreaterThanEqual - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right:    &ast.Constant{Value:"4", Type:0},
+                Operator: 25,
+                Left:     &ast.Constant{Value:"3", Type:0},
+            },
+        },
+    },
+}
+---
+
+[TestReturnComparisonOperators - 1]
+&ast.Program{
+    Statements: {
+        &ast.ReturnStatement{
+            Value: &ast.BinaryExpression{
+                Right: &ast.BinaryExpression{
+                    Right:    &ast.Constant{Value:"1", Type:0},
+                    Operator: 25,
+                    Left:     &ast.BinaryExpression{
+                        Right:    &ast.Constant{Value:"5", Type:0},
+                        Operator: 27,
+                        Left:     &ast.Constant{Value:"4", Type:0},
+                    },
+                },
+                Operator: 26,
+                Left:     &ast.BinaryExpression{
+                    Right:    &ast.Constant{Value:"2", Type:0},
+                    Operator: 24,
+                    Left:     &ast.Constant{Value:"3", Type:0},
+                },
+            },
+        },
+    },
+}
+---

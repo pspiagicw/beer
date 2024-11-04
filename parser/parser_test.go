@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gkampitakis/go-snaps/snaps"
+	"github.com/kr/pretty"
 	"github.com/pspiagicw/osy/ast"
 	"github.com/pspiagicw/osy/lexer"
 	"github.com/pspiagicw/osy/types"
@@ -189,6 +190,8 @@ func testParser(t *testing.T, input string, expected ast.Node) {
 		t.Fatalf("Parser Errors!")
 	}
 
-	assert.Equal(t, expected, program)
+	if !assert.Equal(t, expected, program) {
+		pretty.Println(program)
+	}
 	snaps.MatchSnapshot(t, program)
 }

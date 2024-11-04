@@ -17,14 +17,22 @@ const (
 	ADD
 	MULTIPLY
 	DIVIDE
+	CMP
+	CMPEQ
+	PAREN
 )
 
 var precedences = map[token.TokenType]int{
-	token.INT:   INTEGER,
-	token.PLUS:  ADD,
-	token.MINUS: ADD,
-	token.STAR:  MULTIPLY,
-	token.SLASH: DIVIDE,
+	token.INT:    INTEGER,
+	token.PLUS:   ADD,
+	token.MINUS:  ADD,
+	token.STAR:   MULTIPLY,
+	token.SLASH:  DIVIDE,
+	token.LPAREN: PAREN,
+	token.LT:     CMP,
+	token.GT:     CMP,
+	token.LTE:    CMPEQ,
+	token.GTE:    CMPEQ,
 }
 
 type Parser struct {
@@ -52,10 +60,17 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefixFn(token.TRUE, p.parseBoolean)
 	p.registerPrefixFn(token.STRING, p.parseString)
 	p.registerPrefixFn(token.FLOAT, p.parseFloat)
+	p.registerPrefixFn(token.LPAREN, p.parseParen)
+
 	p.registerInfixFn(token.PLUS, p.parseAdd)
 	p.registerInfixFn(token.MINUS, p.parseSubstract)
 	p.registerInfixFn(token.STAR, p.parseMultiply)
 	p.registerInfixFn(token.SLASH, p.parseDivide)
+	p.registerInfixFn(token.LT, p.parseLt)
+	p.registerInfixFn(token.GT, p.parseGt)
+	p.registerInfixFn(token.LTE, p.parseLte)
+	p.registerInfixFn(token.GTE, p.parseGte)
+
 	p.advance()
 	return p
 }
@@ -302,6 +317,16 @@ func (p *Parser) parseFloat() ast.Expression {
 	}
 	return f
 }
+
+func (p *Parser) parseParen() ast.Expression {
+	p.advance()
+
+	expression := p.parseExpression(LOWEST)
+
+	p.expect(token.RPAREN)
+
+	return expression
+}
 func (p *Parser) parseAdd(left ast.Expression) ast.Expression {
 
 	op := &ast.BinaryExpression{}
@@ -342,7 +367,7 @@ func (p *Parser) parseMultiply(left ast.Expression) ast.Expression {
 
 	p.advance()
 
-	right := p.parseExpression(ADD)
+	right := p.parseExpression(MULTIPLY)
 
 	if right == nil {
 		return nil
@@ -359,13 +384,81 @@ func (p *Parser) parseDivide(left ast.Expression) ast.Expression {
 
 	p.advance()
 
-	right := p.parseExpression(ADD)
+	right := p.parseExpression(DIVIDE)
 
 	if right == nil {
 		return nil
 	}
 
 	op.Operator = token.SLASH
+	op.Left = left
+	op.Right = right
+
+	return op
+}
+func (p *Parser) parseLt(left ast.Expression) ast.Expression {
+	op := &ast.BinaryExpression{}
+
+	p.advance()
+
+	right := p.parseExpression(CMP)
+
+	if right == nil {
+		return nil
+	}
+
+	op.Operator = token.LT
+	op.Left = left
+	op.Right = right
+
+	return op
+}
+func (p *Parser) parseGt(left ast.Expression) ast.Expression {
+	op := &ast.BinaryExpression{}
+
+	p.advance()
+
+	right := p.parseExpression(CMP)
+
+	if right == nil {
+		return nil
+	}
+
+	op.Operator = token.GT
+	op.Left = left
+	op.Right = right
+
+	return op
+}
+func (p *Parser) parseLte(left ast.Expression) ast.Expression {
+	op := &ast.BinaryExpression{}
+
+	p.advance()
+
+	right := p.parseExpression(CMPEQ)
+
+	if right == nil {
+		return nil
+	}
+
+	op.Operator = token.LTE
+	op.Left = left
+	op.Right = right
+
+	return op
+}
+func (p *Parser) parseGte(left ast.Expression) ast.Expression {
+	op := &ast.BinaryExpression{}
+
+	p.advance()
+
+	right := p.parseExpression(CMPEQ)
+
+	if right == nil {
+		return nil
+	}
+
+	op.Operator = token.GTE
 	op.Left = left
 	op.Right = right
 
